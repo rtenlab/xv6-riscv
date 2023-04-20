@@ -681,3 +681,51 @@ procdump(void)
     printf("\n");
   }
 }
+
+extern uint64 syscall_count;
+
+
+struct run { //structures used to count free pages
+  struct run *next;
+};
+
+extern struct {
+  struct spinlock lock;
+  struct run *freelist;
+} kmem;
+
+int print_info(int param){ //the functiuon to calculate system infomation
+  if (param == 0){ // count total number of active processes
+    int count = 0;
+    struct proc *p;
+
+    for (p = proc; p < &proc[NPROC]; p++) {
+      acquire(&p->lock);
+      if (p->state != UNUSED) {
+        count++;
+      }
+      release(&p->lock);
+    }
+
+    return count;
+  }
+  else if (param == 1){ //count syscalls made so far; mainly modified in syscall.c
+    return syscall_count;
+  }
+
+  else if (param == 2){ // count free pages
+    struct run *r;
+    int count = 0;
+
+    acquire(&kmem.lock);
+    for(r = kmem.freelist; r; r = r->next)
+      count++;
+    release(&kmem.lock);
+
+    return count;
+  }
+
+  else {
+    return -1;
+  }
+}
