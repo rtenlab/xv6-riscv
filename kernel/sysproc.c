@@ -100,14 +100,15 @@ uint64 sys_sysinfo(void) //info syscall definition
 uint64 
 sys_procinfo(void)
 {
-  struct proc *p = myproc();
-  struct pinfo *in;
-  uint64 pinfo_addr;
-  argaddr(0,&pinfo_addr); 
+  //struct proc *p = myproc();
+  uint64 in_addr;
 
+  argaddr(0,&in_addr);
+  /*
   if (copyout(p->pagetable, pinfo_addr, (char *)&in, sizeof(in)) < 0)
   {
     return -1;
   }
-  return procinfo(in);
+*/
+  return get_procinfo(in_addr);
 }

@@ -730,19 +730,16 @@ int print_info(int param){ //the functiuon to calculate system infomation
   }
 }
 
-int procinfo(struct pinfo *in)
+int get_procinfo(uint64 addr)
 {
-  struct proc *p;
-  for (p = proc; p < &proc[NPROC]; p++){
-    acquire(&p->lock);
-    if (p->state == RUNNING)
-    {
-      in->ppid = p->parent->pid;
-      in->page_usage = p->sz / 4096; //convert to pages TODO
-      in->syscall_count = p->syscall_count;
-    }
-    release(&p->lock);
-    return 0;
-  }
-  return -1;
+  struct proc *p = myproc();
+  struct pinfo in;
+  
+  in.ppid = p->parent->pid;
+  in.page_usage = p->sz / 4096; //convert to pages TODO
+  in.syscall_count = p->syscall_count; 
+  
+  if (copyout(p->pagetable, addr, (char*)&in, sizeof(in)) < 0)
+    return -1;
+  return 0;
 }

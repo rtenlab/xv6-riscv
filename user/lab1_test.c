@@ -19,7 +19,7 @@ void print_sysinfo(void)
 }
 int main(int argc, char *argv[])
 {
-    /*int mem, n_proc, ret, proc_pid[MAX_PROC];
+    int mem, n_proc, ret, proc_pid[MAX_PROC];
     if (argc < 3) {
         printf("Usage: %s [MEM] [N_PROC]\n", argv[0]);
         exit(-1);
@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
     if (n_proc > MAX_PROC) {
         printf("Cannot test with more than %d processes\n", MAX_PROC);
         exit(-1);
-    }*/   
+    }   
     print_sysinfo();
-    /*
+    
     for (int i = 0; i < n_proc; i++) {
         sleep(1);
         ret = fork();
@@ -52,6 +52,6 @@ int main(int argc, char *argv[])
     sleep(1);
     print_sysinfo();
     for (int i = 0; i < n_proc; i++) kill(proc_pid[i]);
-    */
+    
     exit(0);
 }
