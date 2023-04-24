@@ -96,3 +96,18 @@ uint64 sys_sysinfo(void) //info syscall definition
   argint(0, &param);
   return print_info(param);
 }
+
+uint64 
+sys_procinfo(void)
+{
+  struct proc *p = myproc();
+  struct pinfo *in;
+  uint64 pinfo_addr;
+  argaddr(0,&pinfo_addr); 
+
+  if (copyout(p->pagetable, pinfo_addr, (char *)&in, sizeof(in)) < 0)
+  {
+    return -1;
+  }
+  return procinfo(in);
+}
