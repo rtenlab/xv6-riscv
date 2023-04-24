@@ -124,7 +124,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
-
+  p->syscall_count = 0;
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
     freeproc(p);
@@ -736,9 +736,9 @@ int get_procinfo(uint64 addr)
   struct pinfo in;
   
   in.ppid = p->parent->pid;
-  in.page_usage = p->sz / 4096; //convert to pages TODO
+  in.page_usage = (p->sz / 4096) + 1;
   in.syscall_count = p->syscall_count; 
-  
+ 
   if (copyout(p->pagetable, addr, (char*)&in, sizeof(in)) < 0)
     return -1;
   return 0;
