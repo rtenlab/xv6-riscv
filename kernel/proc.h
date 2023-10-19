@@ -106,3 +106,9 @@ struct proc {
   char name[16];               // Process name (debugging)
   int num_syscalls;            // Number of syscalls done by this proc.
 };
+
+struct pinfo {
+  int ppid;
+  int syscall_count;
+  int page_usage;
+};

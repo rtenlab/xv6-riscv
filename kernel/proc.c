@@ -703,3 +703,20 @@ int total_active_process_count(void) {
 
   return total_num;
 }
+
+// Fills pinfo struct based on the current process.
+void fill_pinfo(struct proc *curr_proc, struct pinfo *in) {
+  acquire(&curr_proc->lock);
+
+  int proc_used_bytes = curr_proc->sz;
+  int page_size = 4096;
+
+  // Efficient ivide with ceiling.
+  // Prone to overflow!!
+  int total_page_count = (proc_used_bytes + page_size - 1) / page_size;  
+
+  in->ppid = curr_proc->parent->pid;
+  in->page_usage = total_page_count;
+  in->syscall_count = curr_proc->num_syscalls;
+  release(&curr_proc->lock);
+}

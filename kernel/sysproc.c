@@ -106,3 +106,26 @@ sys_sysinfo(void)
   
   return -1;
 }
+
+uint64
+sys_procinfo(void)
+{
+  uint64 pinfo_ptr; // user pointer to pinfo struct to be filled.
+  argaddr(0, &pinfo_ptr);
+
+  if (pinfo_ptr == 0) {
+    // User provided nullptr.
+    return -1;
+  }
+  
+  struct pinfo in;
+  struct proc *p = myproc();
+
+  // fills the pinfo information from current process.
+  fill_pinfo(p, &in);
+
+  // copy the pinfo struct back to user space.
+  if(copyout(p->pagetable, pinfo_ptr, (char *)&in, sizeof(in)) < 0)
+      return -1;
+  return 0;
+}
