@@ -681,3 +681,24 @@ procdump(void)
     printf("\n");
   }
 }
+
+// Returns the total number of active process in the system.
+// (ready, running, waiting, or zombie).
+int total_active_process_count(void) {
+  struct proc *p;
+  int total_num = 0;
+
+ for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if(p->state == RUNNABLE ||
+       p-> state == RUNNING ||
+       p-> state == ZOMBIE) {
+
+      total_num++;
+    }
+
+    release(&p->lock);
+  }
+
+  return total_num;
+}

@@ -89,3 +89,15 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_sysinfo(void)
+{
+  int param;
+  argint(0, &param);
+
+  if (param == 0) {
+    return total_active_process_count();
+  }
+  return -1;
+}
