@@ -100,6 +100,9 @@ sys_sysinfo(void)
     return total_active_process_count();
   }else if (param == 1) {
     return get_total_num_syscalls();
+  }else if (param == 2) {
+    return num_free_pages();
   }
+  
   return -1;
 }
