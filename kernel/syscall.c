@@ -79,6 +79,13 @@ argstr(int n, char *buf, int max)
   return fetchstr(addr, buf, max);
 }
 
+// Total number of syscalls done by the system so far.
+static uint64 total_num_syscalls = 0;
+
+int get_total_num_syscalls(void) {
+  return total_num_syscalls;
+}
+
 // Prototypes for the functions that handle system calls.
 extern uint64 sys_fork(void);
 extern uint64 sys_exit(void);
@@ -130,6 +137,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_sysinfo]    sys_sysinfo,
 };
 
+
 void
 syscall(void)
 {
@@ -138,6 +146,10 @@ syscall(void)
 
   num = p->trapframe->a7;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+    // Increase the number of syscalls done by this process.
+    p->num_syscalls++;
+    // Increase the number of syscalls so far done by the system.
+    total_num_syscalls++;
     // Use num to lookup the system call function for num, call it,
     // and store its return value in p->trapframe->a0
     p->trapframe->a0 = syscalls[num]();

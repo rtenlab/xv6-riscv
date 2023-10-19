@@ -98,6 +98,8 @@ sys_sysinfo(void)
 
   if (param == 0) {
     return total_active_process_count();
+  }else if (param == 1) {
+    return get_total_num_syscalls();
   }
   return -1;
 }
